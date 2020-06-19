@@ -97,3 +97,30 @@
 ;; LaTeX previews using pdf-tools
 (latex-preview-pane-enable)
 (setq +latex-viewers '(pdf-tools))
+
+;; cheat.sh ;;
+;;;;;;;;;;;;;;
+;;
+;; Taken from https://www.reddit.com/r/emacs/comments/6ddr7p/snippet_search_cheatsh_using_ivy/
+
+(defun ejmr-search-cheat-sh ()
+  "Search `http://cheat.sh/' for help on commands and code."
+  (interactive)
+  (ivy-read "Command or Topic: "
+      (process-lines "curl" "--silent" "http://cheat.sh/:list?T&q")
+      :require-match t
+      :sort t
+      :history 'ejmr-search-cheat-sh
+      :action (lambda (input)
+		(eww-browse-url (concat "http://cheat.sh/" input "?T&q")))
+      :caller 'ejmr-search-cheat-sh))
+
+;; Temporary binding (that works tho)
+(map! :leader
+
+      (:prefix-map ("z" . "custom")
+       :desc "cheat.sh" "c" #'ejmr-search-cheat-sh)
+
+      )
+;; Will make a pull req at some point about this if there are no conflicts
+;;
