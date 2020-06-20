@@ -119,8 +119,18 @@
 (map! :leader
 
       (:prefix-map ("z" . "custom")
-       :desc "cheat.sh" "c" #'ejmr-search-cheat-sh)
+       :desc "cheat.sh" "c" #'ejmr-search-cheat-sh
+       :desc "Elfeed" "e" #'elfeed)
 
       )
 ;; Will make a pull req at some point about this if there are no conflicts
 ;;
+
+;; Elfeed ;;
+;;;;;;;;;;;;
+
+;; List of feeds:
+
+(setq elfeed-feeds
+      '("https://slatestarcodex.com/feed/"
+        ("https://statmodeling.stat.columbia.edu/feed/" stats) ))
