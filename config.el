@@ -102,6 +102,7 @@
 ;;;;;;;;;;;;;;
 ;;
 ;; Taken from https://www.reddit.com/r/emacs/comments/6ddr7p/snippet_search_cheatsh_using_ivy/
+;; TODO pull request on origin for cheat.sh
 
 (defun ejmr-search-cheat-sh ()
   "Search `http://cheat.sh/' for help on commands and code."
@@ -115,7 +116,26 @@
 		(eww-browse-url (concat "http://cheat.sh/" input "?T&q")))
       :caller 'ejmr-search-cheat-sh))
 
-;; Temporary binding (that works tho)
+;; Elfeed ;;
+;;;;;;;;;;;;
+
+(setq elfeed-feeds
+      '( ; New line with "link" OR ("link" tags moretags)
+
+        "https://slatestarcodex.com/feed/"
+        ("https://statmodeling.stat.columbia.edu/feed/" stats)
+        ("https://thehardestscience.com/feed/" psych)
+        ("https://kieranhealy.org/blog/index.xml" viz stats soc)
+        ("https://errorstatistics.com/feed/" stats phil)
+
+        ))
+
+;; Bindings ;;
+;;;;;;;;;;;;;;
+
+;; Ugly mapping, but that's temporary.
+;; TODO a better config management, possibly modular (see MatthewZMD/.emacs.d)
+
 (map! :leader
 
       (:prefix-map ("z" . "custom")
@@ -123,14 +143,3 @@
        :desc "Elfeed" "e" #'elfeed)
 
       )
-;; Will make a pull req at some point about this if there are no conflicts
-;;
-
-;; Elfeed ;;
-;;;;;;;;;;;;
-
-;; List of feeds:
-
-(setq elfeed-feeds
-      '("https://slatestarcodex.com/feed/"
-        ("https://statmodeling.stat.columbia.edu/feed/" stats) ))
