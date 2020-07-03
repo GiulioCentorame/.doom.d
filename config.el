@@ -127,6 +127,7 @@
         ("https://thehardestscience.com/feed/" psych)
         ("https://kieranhealy.org/blog/index.xml" viz stats soc)
         ("https://errorstatistics.com/feed/" stats phil)
+        "https://retractionwatch.com/feed/"
 
         ))
 
