@@ -91,6 +91,7 @@
   :config
   (org-super-agenda-mode))
 
+(require 'org-ref)
 ;; LaTeX ;;
 ;;;;;;;;;;;
 
@@ -144,3 +145,62 @@
        :desc "Elfeed" "e" #'elfeed)
 
       )
+
+;; Zettlekasten ;;
+;;;;;;;;;;;;;;;;;;
+
+;; This config come straight from here:
+;; https://rgoswami.me/posts/org-note-workflow/
+;; I am currently testing it, so it might not work oob :(
+
+;; Basic variables:
+
+(setq
+   org_notes (concat (getenv "HOME") "/Repositories/zk/Notes/")
+   zot_bib (concat (getenv "HOME") "/Repositories/zk/library.bib")
+   org-directory org_notes
+   deft-directory org_notes
+   org-roam-directory org_notes
+   )
+
+
+
+;; org-ref
+
+(use-package! org-ref
+    :config
+    (setq
+         org-ref-completion-library 'org-ref-ivy-cite
+         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+         org-ref-default-bibliography (list "/home/giuliocentorame/Repositories/zk/library.bib")
+         org-ref-bibliography-notes "/home/giuliocentorame/Repositories/zk/Notes/bibnotes.org"
+         org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+         org-ref-notes-directory "/home/giuliocentorame/Repositories/zk/Notes/"
+         org-ref-notes-function 'orb-edit-notes
+    ))
+
+;; helm-bibtex
+
+(after! org-ref
+  (setq
+   bibtex-completion-notes-path "/home/giuliocentorame/Repositories/zk/Notes/"
+   bibtex-completion-bibliography "/home/giuliocentorame/Repositories/zk/library.bib"
+   bibtex-completion-pdf-field "file"
+   bibtex-completion-notes-template-multiple-files
+   (concat
+    "#+TITLE: ${title}\n"
+    "#+ROAM_KEY: cite:${=key=}\n"
+    "* TODO Notes\n"
+    ":PROPERTIES:\n"
+    ":Custom_ID: ${=key=}\n"
+    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+    ":AUTHOR: ${author-abbrev}\n"
+    ":JOURNAL: ${journaltitle}\n"
+    ":DATE: ${date}\n"
+    ":YEAR: ${year}\n"
+    ":DOI: ${doi}\n"
+    ":URL: ${url}\n"
+    ":END:\n\n"
+    )
+   )
+  )
