@@ -155,11 +155,16 @@
 ;; https://rgoswami.me/posts/org-note-workflow/
 ;; I am currently testing it, so it might not work oob :(
 
-;; Basic variables:
+;; Preparation
 
 (setq
+   ;; Assign variables for local folder & library
+   ;; org_notes should use a flat hierarchy
+   ;; zot_bib should be in sync with Zotero (via Better Bibtex addon)
    org_notes (concat (getenv "HOME") "/Repositories/zk/Notes/")
    zot_bib (concat (getenv "HOME") "/Repositories/zk/library.bib")
+
+   ;; Set mode working folders
    org-directory org_notes
    deft-directory org_notes
    org-roam-directory org_notes
