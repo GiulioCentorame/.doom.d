@@ -91,6 +91,9 @@
   :config
   (org-super-agenda-mode))
 
+
+;; TODO: add https://github.com/egh/zotxt-emacs
+
 ;; LaTeX ;;
 ;;;;;;;;;;;
 
