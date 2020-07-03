@@ -206,3 +206,60 @@
     )
    )
   )
+
+;; org-noter
+
+(use-package! org-noter
+  :after (:any org pdf-view)
+  :config
+  (setq
+   ;; The WM can handle splits
+   org-noter-notes-window-location 'other-frame
+   ;; Please stop opening frames
+   org-noter-always-create-frame nil
+   ;; I want to see the whole file
+   org-noter-hide-other nil
+   ;; Everything is relative to the main notes file
+   org-noter-notes-search-path (list org_notes)
+   )
+  )
+
+;; org-roam-bibtex
+
+(use-package! org-roam-bibtex
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq org-roam-bibtex-preformat-keywords
+   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+  (setq orb-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+           ""
+           :file-name "${slug}"
+           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+
+- tags ::
+- keywords :: ${keywords}
+
+\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+           :unnarrowed t))))
+
+;; Templates
+
+;; Actually start using templates
+(after! org-capture
+  ;; Firefox and Chrome
+  (add-to-list 'org-capture-templates
+               '("P" "Protocol" entry ; key, name, type
+                 (file+headline +org-capture-notes-file "Inbox") ; target
+                 "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?"
+                 :prepend t ; properties
+                 :kill-buffer t))
+  (add-to-list 'org-capture-templates
+               '("L" "Protocol Link" entry
+                 (file+headline +org-capture-notes-file "Inbox")
+                 "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n"
+                 :prepend t
+                 :kill-buffer t))
+)
