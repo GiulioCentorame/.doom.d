@@ -137,6 +137,15 @@
 ;; Bindings ;;
 ;;;;;;;;;;;;;;
 
+;; org-noter (from: https://dotdoom.rgoswami.me/config.html)
+(map! :leader
+      :map (org-mode-map pdf-view-mode-map)
+      (:prefix ("o" . "Org")
+        (:prefix ("n" . "Noter")
+          :desc "Noter" "n" 'org-noter
+          )))
+
+;; MISC:
 ;; Ugly mapping, but that's temporary.
 ;; TODO a better config management, possibly modular (see MatthewZMD/.emacs.d)
 
@@ -147,6 +156,7 @@
        :desc "Elfeed" "e" #'elfeed)
 
       )
+
 
 ;; Zettlekasten ;;
 ;;;;;;;;;;;;;;;;;;
@@ -234,6 +244,8 @@
 (use-package! org-roam-bibtex
   :after (org-roam)
   :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind  (:map org-mode-map
+         (("C-c n a" . orb-note-actions))) ; Using default for now, TODO check if it doesn't break
   :config
   (setq org-roam-bibtex-preformat-keywords
    '("=key=" "title" "url" "file" "author-or-editor" "keywords"))

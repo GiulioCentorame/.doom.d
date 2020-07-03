@@ -13,7 +13,15 @@
 (package! org-ref)
 (package! org-noter)
 (package! helm-bibtex)
-(package! org-roam-bibtex)
+
+;; See https://github.com/org-roam/org-roam-bibtex for more info
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+
+;; When using org-roam via the `+roam` flag
+(unpin! org-roam company-org-roam)
+;; When using bibtex-completion via the `biblio` module
+(unpin! bibtex-completion helm-bibtex ivy-bibtex)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
