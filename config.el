@@ -91,7 +91,6 @@
   :config
   (org-super-agenda-mode))
 
-(require 'org-ref)
 ;; LaTeX ;;
 ;;;;;;;;;;;
 
