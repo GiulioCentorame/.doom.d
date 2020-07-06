@@ -53,6 +53,7 @@
 (package! org-ref)
 (package! org-noter)
 (package! helm-bibtex)
+(package! org-roam-server :recipe (:host github :repo "org-roam/org-roam-server" :files ("*")))
 
 ;; See https://github.com/org-roam/org-roam-bibtex for more info
 (package! org-roam-bibtex

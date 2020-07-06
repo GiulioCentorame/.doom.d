@@ -205,9 +205,11 @@
    org-roam-directory org_notes
    )
 
-;; org-roam keybindings
-;; from: https://www.ianjones.us/2020-05-05-doom-emacs
+;; org-roam settings
+;;
 (after! org-roam
+; KEYBINDINGS
+; from: https://www.ianjones.us/2020-05-05-doom-emacs
         (map! :leader
             :prefix "n"
             :desc "org-roam" "l" #'org-roam
@@ -216,11 +218,23 @@
             :desc "org-roam-find-file" "f" #'org-roam-find-file
             :desc "org-roam-show-graph" "g" #'org-roam-show-graph
             :desc "org-roam-insert" "i" #'org-roam-insert
-            :desc "org-roam-capture" "c" #'org-roam-capture))
+            :desc "org-roam-capture" "c" #'org-roam-capture)
+; Default capture template
+; from https://github.com/sunnyhasija/DOOMEmacs/blob/master/config.el
+        (setq org-roam-ref-capture-templates
+              '(("r" "ref" plain (function org-roam-capture--get-point)
+                 "%?"
+                 :file-name "websites/${slug}"
+                 :head "#+TITLE: ${title}
+    #+ROAM_KEY: ${ref}
+    - source :: ${ref}"
+                 :unnarrowed t)))
+        )
 
 ;; org-ref
 
 (use-package! org-ref
+    :after org
     :config
     (setq
          org-ref-completion-library 'org-ref-ivy-cite
@@ -316,3 +330,20 @@
                  :prepend t
                  :kill-buffer t))
 )
+;; org-roam-server FIXME later on
+;; from https://github.com/sunnyhasija/DOOMEmacs/blob/master/config.el
+;; (use-package! org-roam-server
+;;   :after org-roam
+;;   :config
+;;   (setq org-roam-server-host "127.0.0.1"
+;;         org-roam-server-port 8080
+;;         org-roam-server-export-inline-images t
+;;         org-roam-server-authenticate nil
+;;         org-roam-server-label-truncate t
+;;         org-roam-server-label-truncate-length 60
+;;         org-roam-server-label-wrap-length 20)
+;;   (defun org-roam-server-open ()
+;;     "Ensure the server is active, then open the roam graph."
+;;     (interactive)
+;;     (org-roam-server-mode 1)
+;;     (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
