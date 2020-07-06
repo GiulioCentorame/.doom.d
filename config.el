@@ -161,7 +161,7 @@
 ;; Zettlekasten ;;
 ;;;;;;;;;;;;;;;;;;
 
-;; This config come straight from here:
+;; This config come liberally from here:
 ;; https://rgoswami.me/posts/org-note-workflow/
 ;; I am currently testing it, so it might not work oob :(
 
@@ -180,7 +180,18 @@
    org-roam-directory org_notes
    )
 
-
+;; org-roam keybindings
+;; from: https://www.ianjones.us/2020-05-05-doom-emacs
+(after! org-roam
+        (map! :leader
+            :prefix "n"
+            :desc "org-roam" "l" #'org-roam
+            :desc "org-roam-insert" "i" #'org-roam-insert
+            :desc "org-roam-switch-to-buffer" "b" #'org-roam-switch-to-buffer
+            :desc "org-roam-find-file" "f" #'org-roam-find-file
+            :desc "org-roam-show-graph" "g" #'org-roam-show-graph
+            :desc "org-roam-insert" "i" #'org-roam-insert
+            :desc "org-roam-capture" "c" #'org-roam-capture))
 
 ;; org-ref
 
