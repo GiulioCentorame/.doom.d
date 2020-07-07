@@ -33,7 +33,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Dropbox/org/")
+;; (setq org-directory "~/Dropbox/org/")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -153,7 +153,7 @@
         "https://slatestarcodex.com/feed/"
         ("https://statmodeling.stat.columbia.edu/feed/" stats)
         ("https://thehardestscience.com/feed/" psych)
-        ("https://kieranhealy.org/blog/index.xml" viz stats soc)
+        ("https://kieranhealy.org/blog/index.xml" dataviz stats soc)
         ("https://errorstatistics.com/feed/" stats phil)
         "https://retractionwatch.com/feed/"
 
