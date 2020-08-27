@@ -502,3 +502,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; Lazy flyspell
+; from https://github.com/sunnyhasija/DOOMEmacs/blob/master/config.el
+(after! flyspell (require 'flyspell-lazy) (flyspell-lazy-mode 1))
