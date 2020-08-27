@@ -248,6 +248,13 @@
 
 ;; TODO: add https://github.com/egh/zotxt-emacs
 
+;; Zotxt
+; allows to sync Zotero notes and org notes
+
+(use-package! zotxt
+  :after org)
+;(add-to-list 'load-path (expand-file-name "ox-pandoc" starter-kit-dir))
+
 ;; LaTeX ;;
 ;;;;;;;;;;;
 
