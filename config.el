@@ -62,8 +62,8 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; Basic setqs ;;
-;;;;;;;;;;;;;;;;;
+;; Basic settings ;;
+;;;;;;;;;;;;;;;;;;;;
 
 ;; I nicked the following from https://github.com/sunnyhasija/DOOMEmacs
 ;; Some more sensible than others, they are just up to preferences.
@@ -82,10 +82,63 @@
 
 (delete-selection-mode 1)                         ; Replace selection when inserting text
 (display-time-mode 1)                             ; Enable time in the mode-line
+
+;; Battery status display
 (unless (equal "Battery status not avalible"
                (battery))
   (display-battery-mode 1))                       ; On laptops it's nice to know how much power you have
 (global-subword-mode 1)                           ; Iterate through CamelCase words
+
+;; Fullscreen on startup
+(if (eq initial-window-system 'x)                 ; if started by emacs command or desktop file
+    (toggle-frame-maximized)
+  (toggle-frame-fullscreen))
+
+
+;; Windows behaviour
+; Pick what to see in the frame when you split a window
+
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window-split evil-window-vsplit)
+  (+ivy/switch-buffer))
+(setq +ivy-buffer-preview t)
+
+;; Modeline default to UTF-8
+
+(defun doom-modeline-conditional-buffer-encoding ()
+  (setq-local doom-modeline-buffer-encoding
+              (unless (or (eq buffer-file-coding-system 'utf-8-unix)
+                          (eq buffer-file-coding-system 'utf-8)))))
+(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
+
+;; Windows rotation
+
+(map! :map evil-window-map
+      "SPC" #'rotate-layout
+      "<left>"     #'evil-window-left
+       "<down>"     #'evil-window-down
+       "<up>"       #'evil-window-up
+       "<right>"    #'evil-window-right
+       ;; Swapping windows
+       "C-<left>"       #'+evil/window-move-left
+       "C-<down>"       #'+evil/window-move-down
+       "C-<up>"         #'+evil/window-move-up
+       "C-<right>"      #'+evil/window-move-right)
+
+;; Windows title and project name
+
+(setq frame-title-format
+    '(""
+      (:eval
+       (if (s-contains-p org-roam-directory (or buffer-file-name ""))
+           (replace-regexp-in-string ".*/[0-9]*-?" "🢔 " buffer-file-name)
+         "%b"))
+      (:eval
+       (let ((project-name (projectile-project-name)))
+         (unless (string= "-" project-name)
+           (format (if (buffer-modified-p)  " ◉ %s" "  ●  %s") project-name))))))
 
 ;; Projectile ;;
 ;;;;;;;;;;;;;;;;
