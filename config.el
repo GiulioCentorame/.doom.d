@@ -183,7 +183,7 @@
       org-agenda-block-separator nil
       org-agenda-tags-column 100 ;; from testing this seems to be a good value
       org-agenda-compact-blocks t)
-(setq org-agenda-files "~/Dropbox/Org/Daily/")
+(setq org-agenda-files '("~/Dropbox/org/agenda/"))
 (setq org-agenda-custom-commands
       '(("o" "Overview"
          ((agenda "" ((org-agenda-span 'day)
