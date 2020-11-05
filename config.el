@@ -244,15 +244,22 @@
                                  :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 
-
-;; TODO: add https://github.com/egh/zotxt-emacs
-
 ;; Zotxt
 ; allows to sync Zotero notes and org notes
 
 (use-package! zotxt
   :after org)
-;(add-to-list 'load-path (expand-file-name "ox-pandoc" starter-kit-dir))
+;; (add-to-list 'load-path (expand-file-name "ox-pandoc" starter-kit-dir))
+
+;; org-fancy priorities
+; fuck it, why not
+
+ (use-package! org-fancy-priorities
+; :ensure t
+  :hook
+  (org-mode . org-fancy-priorities-mode)
+  :config
+   (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
 
 ;; LaTeX ;;
 ;;;;;;;;;;;
