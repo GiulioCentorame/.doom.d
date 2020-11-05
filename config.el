@@ -272,6 +272,7 @@
 ;;;;;;;;;;;;;;
 ;;
 ;; Taken from https://www.reddit.com/r/emacs/comments/6ddr7p/snippet_search_cheatsh_using_ivy/
+;; TODO pull request on origin for cheat.sh
 
 (defun ejmr-search-cheat-sh ()
   "Search `http://cheat.sh/' for help on commands and code."
@@ -327,98 +328,30 @@
 ;; Zettlekasten ;;
 ;;;;;;;;;;;;;;;;;;
 
-; liberally plagiarised from https://github.com/sunnyhasija/DOOMEmacs
-; slightly adapted to my needs
+;; This config come liberally from here:
+;; https://rgoswami.me/posts/org-note-workflow/
+;; I am currently testing it, so it might not work oob :(
 
-;; org-ref
+;; Preparation
 
-(use-package! org-ref
-    :after org
-    :init
-    ; code to run before loading org-ref
-    :config
-    ; code to run after loading org-ref
-    )
-(setq org-ref-notes-directory "~/Dropbox/org/references/notes"
-      org-ref-bibliography-notes "~/Dropbox/org/references/articles.org"
-      org-ref-default-bibliography '("~/Dropbox/org/references/library.bib")
-      org-ref-pdf-directory "~/Zotero/")
-
-(after! org
-  (add-to-list 'org-capture-templates
-               '(("a"               ; key
-                  "Article"         ; name
-                  entry             ; type
-                  (file+headline "~/Dropbox/org/phd.org" "Article")  ; target
-                  "* %^{Title} %(org-set-tags)  :article: \n:PROPERTIES:\n:Created: %U\n:Linked: %a\n:END:\n%i\nBrief description:\n%?"  ; template
-                  :prepend t        ; properties
-                  :empty-lines 1    ; properties
-                  :created t        ; properties
-))) )
-
-;; Helm-bibtex
-
-(use-package! helm-bibtex
-  :after org
-  :init
-  ; blah blah
-  :config
-  ;blah blah
-  )
-
-(setq bibtex-format-citation-functions
-      '((org-mode . (lambda (x) (insert (concat
-                                         "\\cite{"
-                                         (mapconcat 'identity x ",")
-                                         "}")) ""))))
 (setq
-      bibtex-completion-pdf-field "file"
-      bibtex-completion-bibliography
-      '("~/Dropbox/org/references/library.bib")
-      bibtex-completion-library-path '("~/Zotero/")
-      bibtex-completion-notes-path "~/Dropbox/org/references/articles.org"
-      )
+   ;; Assign variables for local folder & library
+   ;; org_notes should use a flat hierarchy
+   ;; zot_bib should be in sync with Zotero (via Better Bibtex addon)
+   org_notes (concat (getenv "HOME") "/Repositories/zk/Notes/")
+   zot_bib (concat (getenv "HOME") "/Repositories/zk/library.bib")
 
-;; Org-roam-bibtex
+   ;; Set mode working folders
+   org-directory org_notes
+   deft-directory org_notes
+   org-roam-directory org_notes
+   )
 
-(use-package! org-roam-bibtex
-  :load-path "~/Dropbox/org/references/library.bib" ;Modify with your own path
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :bind (:map org-mode-map
-         (("C-c n a" . orb-note-actions))))
-(setq orb-templates
-      '(("r" "ref" plain (function org-roam-capture--get-point) ""
-         :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
-         :unnarrowed t)))
-(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
-
-(setq orb-templates
-      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
-         ""
-         :file-name "${slug}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
-
-- tags ::
-- keywords :: ${keywords}
-${title}
-:PROPERTIES:
-:Custom_ID: ${citekey}
-:URL: ${url}
-:AUTHOR: ${author-or-editor}
-:JOURNAL: ${journaltitle}\n
-:DATE: ${date}\n
-:YEAR: ${year}\n
-:DOI: ${doi}\n
-:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
-:NOTER_PAGE:
-:END:")))
-
-;; Org-roam
-
-; org-roam settings
-(setq org-roam-directory "~/Dropbox/org/references/notes")
+;; org-roam settings
+;;
 (after! org-roam
+; KEYBINDINGS
+; from: https://www.ianjones.us/2020-05-05-doom-emacs
         (map! :leader
             :prefix "n"
             :desc "org-roam" "l" #'org-roam
@@ -427,93 +360,155 @@ ${title}
             :desc "org-roam-find-file" "f" #'org-roam-find-file
             :desc "org-roam-show-graph" "g" #'org-roam-show-graph
             :desc "org-roam-insert" "i" #'org-roam-insert
-            :desc "org-roam-capture" "c" #'org-roam-capture))
-(after! org-roam
-      (setq org-roam-ref-capture-templates
-            '(("r" "ref" plain (function org-roam-capture--get-point)
-               "%?"
-               :file-name "websites/${slug}"
-               :head "#+TITLE: ${title}
+            :desc "org-roam-capture" "c" #'org-roam-capture)
+; Default capture template
+; from https://github.com/sunnyhasija/DOOMEmacs/blob/master/config.el
+        (setq org-roam-ref-capture-templates
+              '(("r" "ref" plain (function org-roam-capture--get-point)
+                 "%?"
+                 :file-name "websites/${slug}"
+                 :head "#+TITLE: ${title}
     #+ROAM_KEY: ${ref}
     - source :: ${ref}"
-               :unnarrowed t))))  ; capture template to grab websites. Requires org-roam protocol
+                 :unnarrowed t)))
+        )
 
-;; org-journal
-; daily journal entries, useful for temporary TODOs and daily notes
+;; org-ref
 
-(use-package org-journal
-  :init
-  (setq org-journal-dir "~/Dropbox/org/daily/"
-        org-journal-date-prefix "#+TITLE: "
-        org-journal-file-format "%Y-%m-%d.org"
-        org-journal-date-format "%A, %d %B %Y")
-  :config
-  (setq org-journal-find-file #'find-file-other-window )
-  (map! :map org-journal-mode-map
-        "C-c n s" #'evil-save-modified-and-close )
+(use-package! org-ref
+    :after org
+    :config
+    (setq
+         org-ref-completion-library 'org-ref-ivy-cite
+         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+         org-ref-default-bibliography (list "/home/giuliocentorame/Repositories/zk/library.bib")
+         org-ref-bibliography-notes "/home/giuliocentorame/Repositories/zk/Notes/bibnotes.org"
+         org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+         org-ref-notes-directory "/home/giuliocentorame/Repositories/zk/Notes/"
+         org-ref-notes-function 'orb-edit-notes
+    ))
+
+;; helm-bibtex
+
+(after! org-ref
+  (setq
+   bibtex-completion-notes-path "/home/giuliocentorame/Repositories/zk/Notes/"
+   bibtex-completion-bibliography "/home/giuliocentorame/Repositories/zk/library.bib"
+   bibtex-completion-pdf-field "file"
+   bibtex-completion-notes-template-multiple-files
+   (concat
+    "#+TITLE: ${title}\n"
+    "#+ROAM_KEY: cite:${=key=}\n"
+    "* TODO Notes\n"
+    ":PROPERTIES:\n"
+    ":Custom_ID: ${=key=}\n"
+    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+    ":AUTHOR: ${author-abbrev}\n"
+    ":JOURNAL: ${journaltitle}\n"
+    ":DATE: ${date}\n"
+    ":YEAR: ${year}\n"
+    ":DOI: ${doi}\n"
+    ":URL: ${url}\n"
+    ":END:\n\n"
+    )
+   )
   )
 
-(setq org-journal-enable-agenda-integration t)
+;; org-noter
 
-;; Deft for org-roam files only
-
-(use-package deft
-      :after org
-      :bind
-      ("C-c n d" . deft)
-      :custom
-      (deft-recursive t)
-      (deft-use-filter-string-for-filename t)
-      (deft-default-extension "org")
-      (deft-directory "~/Dropbox/org/references/notes/"))
-
-;; org-roam-server
-
-(use-package! org-roam-server
-  :after org-roam
+(use-package! org-noter
+  :after (:any org pdf-view)
   :config
-  (setq org-roam-server-host "127.0.1.1"
-        org-roam-server-port 8080
-        org-roam-server-export-inline-images t
-        org-roam-server-authenticate nil
-        org-roam-server-label-truncate t
-        org-roam-server-label-truncate-length 60
-        org-roam-server-label-wrap-length 20)
-  (defun org-roam-server-open ()
-    "Ensure the server is active, then open the roam graph."
-    (interactive)
-    (org-roam-server-mode 1)
-    (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
-(after! org-roam
-  (org-roam-server-mode))
+  (setq
+   ;; The WM can handle splits
+   org-noter-notes-window-location 'other-frame
+   ;; Please stop opening frames
+   org-noter-always-create-frame nil
+   ;; I want to see the whole file
+   org-noter-hide-other nil
+   ;; Everything is relative to the main notes file
+   org-noter-notes-search-path (list org_notes)
+   )
+  )
 
+;; org-roam-bibtex
 
-;; wakatime ;;
+(use-package! org-roam-bibtex
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind  (:map org-mode-map
+         (("C-c n a" . orb-note-actions))) ; Using default for now, TODO check if it doesn't break
+  :config
+  (setq org-roam-bibtex-preformat-keywords
+   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+  (setq orb-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+           ""
+           :file-name "${slug}"
+           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+
+- tags ::
+- keywords :: ${keywords}
+
+\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+           :unnarrowed t))))
+
+;; Templates
+
+;; Actually start using templates
+(after! org-capture
+  ;; Firefox and Chrome
+  (add-to-list 'org-capture-templates
+               '("P" "Protocol" entry ; key, name, type
+                 (file+headline +org-capture-notes-file "Inbox") ; target
+                 "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?"
+                 :prepend t ; properties
+                 :kill-buffer t))
+  (add-to-list 'org-capture-templates
+               '("L" "Protocol Link" entry
+                 (file+headline +org-capture-notes-file "Inbox")
+                 "* %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n"
+                 :prepend t
+                 :kill-buffer t))
+)
+;; org-roam-server FIXME later on
+;; from https://github.com/sunnyhasija/DOOMEmacs/blob/master/config.el
+;; (use-package! org-roam-server
+;;   :after org-roam
+;;   :config
+;;   (setq org-roam-server-host "127.0.0.1"
+;;         org-roam-server-port 8080
+;;         org-roam-server-export-inline-images t
+;;         org-roam-server-authenticate nil
+;;         org-roam-server-label-truncate t
+;;         org-roam-server-label-truncate-length 60
+;;         org-roam-server-label-wrap-length 20)
+;;   (defun org-roam-server-open ()
+;;     "Ensure the server is active, then open the roam graph."
+;;     (interactive)
+;;     (org-roam-server-mode 1)
+;;     (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
+
+;; Wakatime ;;
 ;;;;;;;;;;;;;;
 (use-package! wakatime-mode
   :ensure t)
 
-;; enables wt for all buffers
+;; Enables wt for all buffers
 (global-wakatime-mode)
 
-;; remember to set `wakatime-api-key' and `wakatime-cli-path'
-;; or to keep your config.el clean of personal information, run on cli
-;; `wakatime --config-write api_key [wakatime_api_key]'
+;; Remember to set `wakatime-api-key' and `wakatime-cli-path'
+;; OR to keep your config.el clean of personal information, run on CLI
+;; `wakatime --config-write api_key [WAKATIME_API_KEY]'
 
-;; custom set variables ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (wakatime-mode)))
- '(org-journal-date-format "%A, %d %B %Y" t)
- '(org-journal-date-prefix "#+TITLE: " t)
- '(org-journal-dir "~/Dropbox/org/daily/" t)
- '(org-journal-file-format "%Y-%m-%d.org" t)
- '(package-selected-packages (quote (org-fancy-priorities))))
+ '(package-selected-packages (quote (wakatime-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
