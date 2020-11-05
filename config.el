@@ -70,8 +70,7 @@
 (setq-default
  delete-by-moving-to-trash t                      ; Delete files to trash
  tab-width 4                                      ; Set width for tabs
- uniquify-buffer-name-style 'forward              ; Uniquify buffer names
- window-combination-resize t                      ; take new window space from all other windows (not just current)
+ uniquify-buffer-name-style 'forward              ; Uniquify buffer names window-combination-resize t                      ; take new window space from all other windows (not just current)
  x-stretch-cursor t)                              ; Stretch cursor to the glyph width
 
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
