@@ -56,6 +56,11 @@
 (package! org-roam-server :recipe (:host github :repo "org-roam/org-roam-server" :files ("*")))
 (package! evil-tutor)
 (package! wakatime-mode)
+(package! zotxt)
+(package! ox-pandoc)
+(package! org-fancy-priorities)
+(package! info-colors)
+;; (package! flyspell-lazy)
 
 ;; See https://github.com/org-roam/org-roam-bibtex for more info
 (package! org-roam-bibtex
