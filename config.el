@@ -122,18 +122,6 @@
 ;; Projectile default search path
 (setq projectile-project-search-path '("~/Repositories/"))
 
-;; neotree ;;
-;;;;;;;;;;;;;
-
-;; Just add keybinding to call it quickly
-
-
-(map!
-   :leader
-   (:prefix "o"
-     :desc "Show neotree" "s" 'neotree-show
-     ))
-
 ;; ORG-MODE ;;
 ;;;;;;;;;;;;;;
 
