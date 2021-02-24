@@ -475,7 +475,7 @@
         ;; org-journal-time-prefix "* "
         org-journal-file-format "%Y-%m-%d.org"
         org-journal-date-format "%A, %d %B %Y"
-        org-journal-file-type 'weekly)
+        org-journal-file-type 'daily)
   :config
   (setq org-journal-find-file #'find-file-other-window )
   (map! :map org-journal-mode-map
