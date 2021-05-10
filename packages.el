@@ -70,3 +70,8 @@
 (unpin! org-roam company-org-roam)
 ;; When using bibtex-completion via the `biblio` module
 (unpin! bibtex-completion helm-bibtex ivy-bibtex)
+
+;; see https://discord.com/channels/406534637242810369/671478791058751508/742490224709599242
+(package! pdf-tools
+  :recipe (:host github :repo "flatwhatson/pdf-tools" :branch "fix-macros")
+  :pin "eb6d40663069f2b7e6b52e907eeaa4e37375feb6")
