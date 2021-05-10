@@ -61,6 +61,7 @@
 (package! org-fancy-priorities)
 (package! info-colors)
 (package! olivetti)
+(package! snakemake-mode)
 
 ;; See https://github.com/org-roam/org-roam-bibtex for more info
 (package! org-roam-bibtex
