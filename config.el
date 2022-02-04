@@ -160,19 +160,19 @@
 ;;;;;;;;;;;;;;
 ;;
 ;; Taken from https://www.reddit.com/r/emacs/comments/6ddr7p/snippet_search_cheatsh_using_ivy/
-;; TODO pull request on origin for cheat.sh
+;; FIXME this broke :()
 
-(defun ejmr-search-cheat-sh ()
-  "Search `http://cheat.sh/' for help on commands and code."
-  (interactive)
-  (ivy-read "Command or Topic: "
-      (process-lines "curl" "--silent" "http://cheat.sh/:list?T&q")
-      :require-match t
-      :sort t
-      :history 'ejmr-search-cheat-sh
-      :action (lambda (input)
-		(eww-browse-url (concat "http://cheat.sh/" input "?T&q")))
-      :caller 'ejmr-search-cheat-sh))
+;; (defun ejmr-search-cheat-sh ()
+;;   "Search `http://cheat.sh/' for help on commands and code."
+;;   (interactive)
+;;   (ivy-read "Command or Topic: "
+;;       (process-lines "curl" "--silent" "http://cheat.sh/:list?T&q")
+;;       :require-match t
+;;       :sort t
+;;       :history 'ejmr-search-cheat-sh
+;;       :action (lambda (input)
+;; 		(eww-browse-url (concat "http://cheat.sh/" input "?T&q")))
+;;       :caller 'ejmr-search-cheat-sh))
 
 ;; Bindings ;;
 ;;;;;;;;;;;;;;
@@ -181,14 +181,14 @@
 ;; Ugly mapping, but that's temporary.
 ;; TODO a better config management, possibly modular (see MatthewZMD/.emacs.d)
 
-(map! :leader
+;; (map! :leader
 
-      (:prefix-map ("z" . "custom")
-       :desc "cheat.sh" "c" #'ejmr-search-cheat-sh
-       ;; :desc "Elfeed" "e" #'elfeed
-       )
+;;       (:prefix-map ("z" . "custom")
+;;        :desc "cheat.sh" "c" #'ejmr-search-cheat-sh
+;;        ;; :desc "Elfeed" "e" #'elfeed
+;;        )
 
-      )
+;;       )
 
 
 ;; Wakatime ;;
@@ -249,7 +249,20 @@
    ;;  (:prefix "n"
    ;;   :desc "Insert" "i" 'org-noter-insert-note
    ;;   ))
- ))
+   ))
+
+;; Path configuration for citar ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(after! citar
+  (setq! citar-bibliography '("~/Repositories/notes/library.bib")
+         citar-library-paths
+         citar-notes-paths)
+  )
+
+(after! org-noter
+  (setq org-noter-notes-search-path '("~/Repositories/notes/library.bib"))
+  )
 
 ;; Disable auto RDM ;;
 ;;;;;;;;;;;;;;;;;;;;;;
