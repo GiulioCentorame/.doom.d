@@ -49,30 +49,10 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! org-super-agenda)
-(package! org-ref)
-(package! org-noter)
-(package! helm-bibtex)
-(package! org-roam-server :recipe (:host github :repo "org-roam/org-roam-server" :files ("*")))
 (package! evil-tutor)
 (package! wakatime-mode)
-(package! zotxt)
-(package! ox-pandoc)
-(package! org-fancy-priorities)
+;; (package! zotxt)
 (package! info-colors)
 (package! olivetti)
 (package! snakemake-mode)
-
-;; See https://github.com/org-roam/org-roam-bibtex for more info
-(package! org-roam-bibtex
-  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-
-;; When using org-roam via the `+roam` flag
-(unpin! org-roam company-org-roam)
-;; When using bibtex-completion via the `biblio` module
-(unpin! bibtex-completion helm-bibtex ivy-bibtex)
-
-;; see https://discord.com/channels/406534637242810369/671478791058751508/742490224709599242
-(package! pdf-tools
-  :recipe (:host github :repo "flatwhatson/pdf-tools" :branch "fix-macros")
-  :pin "eb6d40663069f2b7e6b52e907eeaa4e37375feb6")
+(package! elcord)
