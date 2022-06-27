@@ -255,9 +255,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (after! citar
-  (setq! citar-bibliography '("~/Repositories/notes/library.bib")
-         citar-library-paths
-         citar-notes-paths)
+  (setq! citar-bibliography '("~/Repositories/notes/library.bib") ; path to .bib file
+         citar-library-paths ; path to pdfs
+         citar-notes-paths) ; path to either .org file (single note file) or folder (multiple note files)
   )
 
 (after! org-noter
