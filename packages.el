@@ -56,3 +56,7 @@
 (package! olivetti)
 (package! snakemake-mode)
 (package! elcord)
+(package! yasnippet-snippets)
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+(unpin! rustic)

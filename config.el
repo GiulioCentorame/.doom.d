@@ -279,3 +279,18 @@
 ;; Enables wt for all buffers
 ;; Has to stay at the end of file
 (global-wakatime-mode)
+
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         :map copilot-completion-map
+         ("<tab>" . 'copilot-accept-completion)
+         ("TAB" . 'copilot-accept-completion)))
+
+;; Hotfix for the rust debugger
+(defadvice! fix-lsp-rust-analyzer-debug (&rest _)
+  :before #'lsp-rust-analyzer-debug
+  (require 'dap-cpptools))
+(setq dap-cpptools-extension-version "1.12.1")
